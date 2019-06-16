@@ -1,2 +1,2 @@
 # ideal-octo-barnacle
-problem solving practices
+problem solving practices from Hackerrank and Leetcode
