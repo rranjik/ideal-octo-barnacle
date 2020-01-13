@@ -1,2 +1,4 @@
 ﻿  vector.cpp
-  vector.vcxproj -> C:\Users\RAGAVENDRA KUMAR R\OneDrive\Documents\ideal-octo-barnacle\vector\Debug\vector.exe
+c:\users\ragavendra kumar r\onedrive\documents\ideal-octo-barnacle\vector\vector\vector.cpp(25): error C3861: 'exception': identifier not found
+  c:\users\ragavendra kumar r\onedrive\documents\ideal-octo-barnacle\vector\vector\vector.cpp(25): note: 'exception': function declaration must be available as none of the arguments depend on a template parameter
+  c:\users\ragavendra kumar r\onedrive\documents\ideal-octo-barnacle\vector\vector\vector.cpp(59): note: see reference to class template instantiation 'Array<T>' being compiled
