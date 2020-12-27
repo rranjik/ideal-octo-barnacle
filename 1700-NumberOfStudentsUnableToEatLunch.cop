@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int countStudents(vector<int>& students, vector<int>& sandwiches) {
+        vector<int> b;
+        int eres{};
+        int done = false;
+        int j = 0;
+        while(!done){
+            int i = 0;
+            int entersize = students.size();
+            cout<<"entersize = "<<entersize<<endl;
+            while(i<students.size()){
+                if(sandwiches[j]==students[i]) {
+                    j++;
+                    eres++;
+                }
+                else{
+                    b.push_back(students[i]);
+                }
+                i++;
+            }
+            students = b;
+            b.clear();
+            if(!students.size()||students.size()==entersize) done = true;
+        }
+        return sandwiches.size()-eres;
+    }
+};
