@@ -1,3 +1,24 @@
+//O(nlgn) Patience sorting
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        vector<int> p;
+        for(const auto& n : nums){
+            if(p.size()==0) {
+                p.push_back(n);
+                continue;
+            }
+            auto l = lower_bound(p.begin(), p.end(), n);
+            if(l==p.end()) p.push_back(n);
+            else {
+                *l = n;
+            }
+        }
+        return p.size();
+    }
+};
+
+/* O(n^2)
 class coor{public:int i; int l;coor(int _i, int _l){i = _i; l = _l;}
           bool operator==(const coor& o)const{return i==o.i&&l==o.l;}};
 namespace std{template<>struct hash<coor>{size_t operator()(const coor& c)const
@@ -34,3 +55,4 @@ public:
         return m;
     }
 };
+*/
