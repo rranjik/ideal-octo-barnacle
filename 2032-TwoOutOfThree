@@ -1,0 +1,24 @@
+class Solution {
+public:
+    unordered_set<int> s;
+    void foo(const vector<int>& a, unordered_map<int, int>& m){
+        for(const auto& n : a){
+            s.insert(n);
+            m[n] = 1;
+        }
+    }
+    vector<int> twoOutOfThree(vector<int>& nums1, vector<int>& nums2, vector<int>& nums3) {
+        unordered_map<int, int> m1;
+        unordered_map<int, int> m2;
+        unordered_map<int, int> m3;
+        foo(nums1, m1);
+        foo(nums2, m2);
+        foo(nums3, m3);
+        vector<int> res;
+        for(const auto& it : s){
+            auto c = m1[it]+m2[it]+m3[it];
+            if(c>=2) res.push_back(it);
+        }
+        return res;
+    }
+};
