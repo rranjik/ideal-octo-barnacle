@@ -1,42 +1,54 @@
 class MaxStack {
 public:
     /** initialize your data structure here. */
-    using lit = list<int>::iterator;
-    list<int> dll;
-    map<int, vector<lit>> m;
+    using pii = pair<int, int>;
+    stack<pii> stk;
     MaxStack() {
         
     }
     
     void push(int x) {
-        dll.insert(dll.begin(), x);
-        m[x].push_back(dll.begin());
+        if(stk.empty()) stk.push(make_pair(x, x));
+        else{
+            if(stk.top().first>=x){
+                stk.push(make_pair(stk.top().first, x));
+            }else{
+                stk.push(make_pair(x, x));
+            }
+        }
     }
     
     int pop() {
-        auto it = dll.begin();
-        auto ret = *it;
-        m[ret].pop_back();
-        if(!m[ret].size()) m.erase(m.find(ret));
-        dll.erase(it);
+        auto ret = stk.top().second;
+        stk.pop();
         return ret;
     }
     
     int top() {
-        return *dll.begin();
+        return stk.top().second;
     }
     
     int peekMax() {
-        return m.rbegin()->first;
+        return stk.top().first;
     }
     
     int popMax() {
-        auto it = m.rbegin()->second.back();
-        auto ret = *it;
-        m[ret].pop_back();
-        if(!m[ret].size()) m.erase(m.find(ret));
-        dll.erase(it);
-        return ret;
+        auto m = stk.top().first;
+        stack<pair<int, int>> buff;
+        while(stk.top().second<m){
+            buff.push(stk.top());
+            stk.pop();
+        }
+        stk.pop();
+        while(!buff.empty()){
+            if(!stk.empty()&&stk.top().first>=buff.top().second){
+                stk.push(make_pair(stk.top().first, buff.top().second));
+            }else{
+                stk.push(make_pair(buff.top().second, buff.top().second));
+            }
+            buff.pop();
+        }
+        return m;
     }
 };
 
