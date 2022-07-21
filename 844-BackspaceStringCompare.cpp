@@ -1,30 +1,36 @@
 class Solution {
 public:
-    bool backspaceCompare(string s, string t) {
-        auto sp = 0;
-        auto tp = 0;
-        int i = 0;
-        while(i<s.length()){
-            cout<<"i = "<<i<<"; sp = "<<sp<<"; s = "<<s<<endl;
-            if(s[i]=='#'){
-                sp = sp?--sp:sp;
-            }else{
-                s[sp] = s[i];
-                sp++;
+    bool backspaceCompare(string S, string T) {
+        stack<char> s1;
+        stack<char> s2;
+        for(int i = 0; i<S.size(); i++){
+            if(S[i]=='#'){
+                if(!s1.empty()){
+                    s1.pop();
+                }
+            }else {
+                s1.push(S[i]);
             }
-            i++;
         }
-        i = 0;
-        while(i<t.length()){
-            cout<<"i = "<<i<<"; tp = "<<tp<<"; t = "<<t<<endl;
-            if(t[i]=='#'){
-                tp = tp?--tp:tp;
-            }else{
-                t[tp] = t[i];
-                tp++;
+        string s, t;
+        while(!s1.empty()){
+            s+=s1.top();
+            s1.pop();
+        }
+        for(int i = 0; i<T.size(); i++){
+            if(T[i]=='#'){
+                if(!s2.empty()){
+                    s2.pop();
+                }
+            }else {
+                s2.push(T[i]);
             }
-            i++;
         }
-        return s.substr(0, sp) == t.substr(0, tp);
+        while(!s2.empty()){
+            t+=s2.top();
+            s2.pop();
+        }
+        cout<<"s = "<<s<<"; t = "<<t<<endl;
+        return s == t;
     }
 };
