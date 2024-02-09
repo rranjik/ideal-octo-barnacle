@@ -1,27 +1,24 @@
 class Solution {
 public:
-    unordered_map<string, int> c;
-    int decode(string s){
-        if(c.find(s)!=c.end())return c[s];
-        if(s.length()==0) return 1;
-        else {
-            if(s.length()==1) {c[s] = 1; return 1;}
-            int res = 0;
-            int l = s[s.length()-1]-'0';
-            int ll = s[s.length()-2]-'0';
-            if(ll&&ll*10+l<=26) 
-                res += decode(s.substr(0, s.length()-2));
-            if(l)
-                res += decode(s.substr(0, s.length()-1));
-            //if(!ll&&l)
-            //    return 0;
-            c[s] =res;
-            return res;
+    unordered_map<int, int> c;
+    int dfs(int i, const string& s){
+        if(i<s.size()&&s[i]=='0') return 0;
+        if(i>=s.size()) return 1;
+        if(c.find(i)!=c.end()) return c[i];
+        int x = 0;
+        int res = 0;
+        int oi = i;
+        while(i<s.size()){
+            x*=10;
+            x+=(s[i]-'0');
+            if(x>26) break;
+            cout<<"x = "<<x<<endl;
+            res += dfs(i+1, s);
+            i++;
         }
+        return c[oi] = res;
     }
     int numDecodings(string s) {
-        if(s=="0") return 0;
-        if(s.length()>=1&&s[0]=='0') return 0;
-        return decode(s);
+        return dfs(0, s);
     }
 };
