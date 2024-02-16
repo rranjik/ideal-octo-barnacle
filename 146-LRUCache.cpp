@@ -1,44 +1,34 @@
 class LRUCache {
 public:
-    int c;
-    //key and pointer to key-value pair in list
-    unordered_map<int, list<pair<int, int>>::iterator> m;
     list<pair<int, int>> l;
+    unordered_map<int, list<pair<int, int>>::iterator> m;
+    int cap;
     LRUCache(int capacity) {
-        this->c = capacity;
+        cap = capacity;
     }
     
     int get(int key) {
-        auto it = m.find(key);
-        if(it!=m.end()) {
-            //if found take that element (pointer obtained by 
-            //hash lookup), insert at the beginning. w/ l.splice
-            //list.splice(pos, list, pointer)
-            //transfer pointer from list to *this at pos
-            l.splice(l.begin(), l, it->second);
-            return m[key]->second;
-        }
-        else return -1;
+        if(m.find(key)==m.end()) return -1;
+        auto posit = m[key];
+        l.splice(l.begin(), l, posit);
+        m[key] = l.begin();
+        return m[key]->second;
     }
     
     void put(int key, int value) {
-        auto it = m.find(key);
-        //if found, remove the element pointer to by the 
-        //pointer (obtained by hash loopkup)
-        if(it!=m.end()) l.erase(m[key]);
-        //this happens regarless of the item being found
-        //put the thing in the front of the list
-        l.push_front(pair<int, int>(key, value));
-        //rewrite the pointer in hashtable
+        if(m.find(key)!=m.end()){
+            auto posit = m[key];
+            l.splice(l.begin(), l, posit);
+            m[key]->second = value;
+            return;
+        }
+        l.push_front({key, value});
         m[key] = l.begin();
-        if(m.size()>c){
-            //if we hit cap by this insert
-            //get they key of the last elem in list
-            auto k = l.rbegin()->first;
-            //remove last
-            l.pop_back();
-            //evict by key
-            m.erase(k);
+        if(m.size()>cap){
+            auto torem = l.rbegin();
+            auto keytorem = torem->first;
+            l.erase(m[torem->first]);
+            m.erase(m.find(keytorem));
         }
     }
 };
@@ -48,4 +38,4 @@ public:
  * LRUCache* obj = new LRUCache(capacity);
  * int param_1 = obj->get(key);
  * obj->put(key,value);
- */
+ *
