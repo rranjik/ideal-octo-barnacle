@@ -9,25 +9,28 @@
  */
 class Solution {
 public:
-    TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
-        stack<TreeNode*> s;
-        if(!root||!p) return nullptr;
-        TreeNode* prev = nullptr;
-        while(!s.empty()||root){
-            if(root){
-                if(root) cout<<"pushing "<<root->val<<endl;
-                s.push(root);
-                root = root->left;
-            }else{
-                //if(s.empty()) return nullptr;
-                auto n = s.top();
-                s.pop();
-                if(prev == p) return n;
-                cout<<n->val<<" "<<endl;
-                prev = n;
-                root = n->right;
-            }
+    TreeNode* res = nullptr;
+    void dfs(TreeNode* rt, TreeNode* p, bool& foundp){
+        if(!rt) return;
+        if(rt==p) {
+            foundp = true;   
+            return;
         }
-        return nullptr;
+        dfs(rt->left, p, foundp);
+        if(foundp&&res==nullptr) res = rt;
+        dfs(rt->right, p, foundp);
+    }
+    TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
+        if(!root||!p) return nullptr;
+        if(p->right){
+            auto start = p->right;
+            while(start->left!=nullptr){
+                start = start->left;
+            }
+            return start;
+        }
+        bool foundp = false;
+        dfs(root, p, foundp);
+        return res;
     }
 };
