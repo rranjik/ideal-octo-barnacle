@@ -1,26 +1,23 @@
 class Solution {
 public:
     vector<int> findOriginalArray(vector<int>& changed) {
-        if(changed.size()%2) return {};
-        unordered_map<int, int> f;
-        for(const auto& n : changed){
-            f[n]++;
-        }
-        sort(changed.begin(), changed.end());
+        int n = changed.size();
+        if(n%2) return {};
+        map<int, int> m;
+        for(const auto& c : changed) m[c]++;
+        auto cm = m;
+        int found = 0;
         vector<int> res;
-        for(int i =0; i<changed.size(); i++){
-            auto v = changed[i];
-            if(f.find(v)!=f.end()){
-                if(f.find(2*v)!=f.end()){
-                    res.push_back(v);
-                    f[v]--;
-                    f[2*v]--;
-                    if(!f[v]) f.erase(v);
-                    if(!f[2*v]) f.erase(2*v);
-                }else{
-                    return {};
-                }
-            }
+        while(found<(n/2)){
+            auto f = m.begin()->first;
+            m[f]--;
+            if(!m[f]) m.erase(f);
+            cout<<f<<endl;
+            if(m.find(f*2)==m.end()) return {};
+            res.push_back(f);
+            m[2*f]--;
+            if(!m[2*f]) m.erase(2*f);
+            found++;
         }
         return res;
     }
