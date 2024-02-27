@@ -11,19 +11,14 @@ public:
 
 class Solution {
 public:
-    unordered_set<Node*> s;
-    void goUp(Node* a){
-        if(!a) return;
-        s.insert(a);
-        goUp(a->parent);
-    }
-    Node* goUpAgain(Node* a){
-        if(!a) return nullptr;
-        if(s.find(a)!=s.end()) return a;
-        return goUpAgain(a->parent);
-    }
     Node* lowestCommonAncestor(Node* p, Node * q) {
-        goUp(p);
-        return goUpAgain(q);
+        auto one = p; auto two = q;
+        while(one!=two){
+            if(!one) one = q;
+            else one = one->parent;
+            if(!two) two = p;
+            else two = two->parent;
+        }
+        return one;
     }
 };
