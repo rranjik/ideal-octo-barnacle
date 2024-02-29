@@ -1,22 +1,17 @@
 class Solution {
 public:
     int missingElement(vector<int>& nums, int k) {
-        int miss = 0;
-        int prev = nums[0];
-        int yet = k;
-        for(int i = 1; i<nums.size(); i++){
-            cout<<"miss = "<<miss<<" yet = "<<yet<<endl;
-            cout<<"diff = "<<nums[i]-prev-1<<endl;
-            if(nums[i]-prev>1){
-                if(miss+nums[i]-prev-1>=k){
-                    return nums[i-1]+yet;// -= nums[i]-prev-1;
-                }else{
-                    miss+=nums[i]-prev-1;
-                    yet-=nums[i]-prev-1;
+        int expect = nums[0]+1;
+        for(int i = 1; i <nums.size(); i++){
+            if(nums[i]!=expect){
+                int missed = nums[i]-expect;
+                if(k<=missed){
+                    return expect+k-1;
                 }
+                k-=missed;
             }
-            prev=nums[i];
+            expect = nums[i]+1;
         }
-        return nums[nums.size()-1]+yet;
+        return nums[nums.size()-1]+k;
     }
-};
+}
