@@ -1,24 +1,58 @@
 class MyHashMap {
 public:
-    /** Initialize your data structure here. */
-    vector<int> h;
+    int mod = 499;
+    vector<list<pair<int, int>>> v;
     MyHashMap() {
-        h = vector<int>(1000000, -1);
+        v = vector<list<pair<int, int>>> (mod+1);
     }
     
-    /** value will always be non-negative. */
     void put(int key, int value) {
-        h[key] = value;
+        auto ins_key = key%mod;
+        if(v[ins_key].size()==0){
+            auto kvp = pair<int, int>({key, value});
+            v[ins_key].push_back(kvp);
+            return;
+        }
+        auto head = v[ins_key].begin();
+        while(head!=v[ins_key].end()){
+            if(head->first==key){
+                head->second = value;
+                return;
+            }
+            head = next(head);
+        }
+        v[ins_key].push_back({key, value});
     }
     
-    /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
     int get(int key) {
-        return h[key];
+        auto ins_key = key%mod;
+        if(v[ins_key].size()==0){
+            return -1;
+        }
+        auto head = v[ins_key].begin();
+        while(head!=v[ins_key].end()){
+            if(head->first==key){
+                return head->second;
+            }
+            head = next(head);
+        }
+        return -1;
     }
     
-    /** Removes the mapping of the specified value key if this map contains a mapping for the key */
     void remove(int key) {
-        h[key] = -1;
+        auto ins_key = key%mod;
+        if(v[ins_key].size()==0){
+            return;
+        }
+        auto head = v[ins_key].begin();
+        while(head!=v[ins_key].end()){
+            if(head->first==key){
+                auto nextn = next(head);
+                v[ins_key].erase(head);
+                return;
+            }
+            head = next(head);
+        }
     }
 };
 
