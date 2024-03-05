@@ -9,12 +9,13 @@ public:
                 mini++;
             }else if(c==')'){
                 maxi--;
-                mini = max(mini-1, 0);
+                mini--;
             }else{
+                mini--;
                 maxi++;
-                mini = max(mini-1, 0);
             }
             if(maxi<0) return false;
+            mini = max(mini, 0);
         }
         return mini==0;
     }
