@@ -1,31 +1,16 @@
 class Solution {
 public:
     void sortColors(vector<int>& nums) {
-        int r = 0;
-        int w = 0;
-        int b = 0;
-        for(const auto& n :nums){
-            switch(n){
-                case 0: r++; break;
-                case 1: w++; break;
-                case 2: b++; break;
-            }
+        int zero = 0; int one = 0; int two = 0;
+        for(const auto& x : nums){
+            if(x==0) zero++;
+            else if(x==1) one++;
+            else if(x==2) two++;
         }
-        int i = 0;
-        while(r){
-            nums[i] = 0;
-            r--;
-            i++;
-        }
-        while(w){
-            nums[i] = 1;
-            w--;
-            i++;
-        }
-        while(b){
-            nums[i] = 2;
-            b--;
-            i++;
-        }
+        cout<<"zero = "<<zero<<" one = "<<one<<" two = "<<two<<endl;
+        int j = 0;
+        while(zero) {nums[j++] = 0; zero--;}
+        while(one) {nums[j++] = 1; one--;}
+        while(two) {nums[j++] = 2; two--;}
     }
-};
+}
