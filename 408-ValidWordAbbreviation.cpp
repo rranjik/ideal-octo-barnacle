@@ -1,30 +1,39 @@
 class Solution {
 public:
-    bool validWordAbbreviation(string word, string abbr) {
-        int i = 0; int j = 0;
-        int wlen = word.size();
-        int alen = abbr.size();
-        int num = 0;
-        while(i<wlen&&j<alen){
-            if(abbr[j]>='0'&&abbr[j]<='9'){
-                string n;
-                while(abbr[j]>='0'&&abbr[j]<='9'){
-                    n+=abbr[j];
-                    j++;
+    bool validWordAbbreviation(string w, string a) {
+        int n = a.size();
+        int m = w.size();
+        int i = 0; 
+        int j = 0;
+        int x = 0;
+        while(i<n&&j<m){
+            cout<<" i = "<<i<<" j = "<<j<<endl;
+            if(a[i]>='0'&&a[i]<='9'){
+                int start = i;
+                while(a[i]>='0'&&a[i]<='9'){
+                    x = x*10+(a[i]-'0');
+                    i++;
                 }
-                if(to_string(stoi(n)).size()!=n.size()||!(stoi(n))) return false;
-                num = stoi(n);
-            }else{
-                i+=num;
-                num = 0;
-                if(abbr[j]!=word[i]) {
+                if(!x) return false;
+                if(
+                    (to_string(
+                        stoi(a.substr(start, i-start))).size()!=
+                       a.substr(start, i-start).size()
+                       )
+                ) 
+                       {
+                        return false;
+                       }
+                j+=x;
+                x = 0;
+            }
+            else{
+                if(a[i]!=w[j]){
                     return false;
                 }
-                i++;
-                j++;
+                i++; j++;
             }
         }
-        i+=num;
-        return i==wlen&&j==alen;
+        return i==n&&j==m;
     }
 };
