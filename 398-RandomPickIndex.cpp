@@ -1,15 +1,20 @@
 class Solution {
 public:
-    unordered_map<int, vector<int>> m;
+    map<int, vector<int>> m;
     Solution(vector<int>& nums) {
-        for(int i = 0; i<nums.size(); i++) m[nums[i]].push_back(i);
+        for(int i = 0; i<nums.size(); i++){
+            m[nums[i]].push_back(i);
+        }
     }
     
     int pick(int target) {
-        random_device dev;
-        mt19937 rng(dev());
-        uniform_int_distribution<mt19937::result_type> dist6(0,m[target].size()-1);
-        return m[target][dist6(rng)];
+        int lo = 0;
+        int hi = m[target].size()-1;
+        random_device rd;
+        mt19937 twist(rd());
+        uniform_int_distribution<int> dist(0, hi);
+        auto idx = dist(twist);
+        return m[target][idx];
     }
 };
 
