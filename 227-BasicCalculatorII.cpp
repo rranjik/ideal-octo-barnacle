@@ -1,86 +1,71 @@
 class Solution {
 public:
-    unordered_map<char, int> pred = {
-        {')', -1},
-        {'+', 0},
-        {'-', 0},
-        {'*', 1},
-        {'/', 1},
+    unordered_map<char, int> p = {
+        {'(', 0},
+        {'+', 1},
+        {'-', 1},
+        {'/', 2},
+        {'*', 2},
     };
-    string trim(string s){
+    string remspace(string s){
+        string res;
+        for(const auto& c : s) if(c!=' ') res+=c;
+        return res;
+    }
+    string remunary(string s){
         string res;
         for(int i = 0; i<s.size(); i++){
-            if(s[i]!=' '){
-                res+=s[i];
+            if((i==0||s[i-1]=='(')&&(s[i]=='-'||s[i]=='+')){
+                res+='0';
             }
+            res+=s[i];
         }
         return res;
     }
-    string remunaryminus(string s){
-        for(int i = 0; i<s.size(); i++){
-            if(s[i]=='-'&&!i){
-                s = '0'+s;
-            }
-        }
-        return s;
-    }
     int calculate(string s) {
-        s = trim(s);
-        s = remunaryminus(s);
         s = "("+s+")";
-        cout<<s<<endl;
-        stack<char> opstack;
-        stack<int> numstack;
+        s = remspace (s); s = remunary(s);
+        stack<int> nstk; 
+        stack<char> opstk;
         int i = 0;
         while(i<s.size()){
-            auto c = s[i];
-            if(c=='('){
-                opstack.push(c);
-                i++;
-                continue;
-            }
-            if((c>='0')&&(c<='9')){
-                int num = 0;               
-                while(i<s.size()&&(s[i]>='0')&&(s[i]<='9')){
-                    num = num*10+(s[i]-'0');
+            if(s[i]=='('){
+                opstk.push(s[i]);
+            }else if(s[i]>='0'&&s[i]<='9'){
+                int x = 0;
+                while(s[i]>='0'&&s[i]<='9'){
+                    x=x*10+(s[i]-'0');
                     i++;
                 }
-                cout<<"num = "<<num<<endl;
-                numstack.push(num);
-            }else {
-                cout<<c<<endl;
-                while(!opstack.empty()&&opstack.top()!='('&&
-                pred[c]<=pred[opstack.top()]){
-                    auto n2 = numstack.top(); numstack.pop();
-                    auto n1 = numstack.top(); numstack.pop();
-                    auto op = opstack.top(); opstack.pop();
+                i--;
+                nstk.push(x);
+            }else{
+                while((opstk.size())&&
+                (opstk.top()!='(')&&
+                (p[opstk.top()]>=p[s[i]])){
+                    auto n2 = nstk.top(); nstk.pop();
+                    auto n1 = nstk.top(); nstk.pop();
+                    auto op = opstk.top(); opstk.pop();
                     auto x = eval(op, n1, n2);
-                    cout<<n1<<op<<n2<<" = "<<x<<endl;
-                    numstack.push(x);
+                    nstk.push(x);
                 }
-                if(c==')'){
-                    opstack.pop();
+                if(s[i]==')'){
+                    opstk.pop();
                 }else{
-                    cout<<"pushed "<<c<<endl;
-                    opstack.push(c);
+                    opstk.push(s[i]);
                 }
-                i++;
             }
+            i++;
         }
-        return numstack.top();
+        return nstk.top();
     }
-    int eval(char c, int n1, int n2){
-        switch(c){
-            case '+':
-                return n1+n2;
-            case '-':
-                return n1-n2;
-            case '/':
-                return n1/n2;
-            case '*':
-                return n1*n2;
-            default:
-                return 0;
+    int eval(char op, int n1, int n2){
+        switch(op){
+            case '+': return n1+n2;
+            case '-': return n1-n2;
+            case '/': return n1/n2;
+            case '*': return n1*n2;
+            default: return 0;
         }
         return 0;
     }
