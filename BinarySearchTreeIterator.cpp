@@ -4,37 +4,33 @@
  *     int val;
  *     TreeNode *left;
  *     TreeNode *right;
- *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
 class BSTIterator {
 public:
-    int ptr = 0;
-    vector<int> in;
-    
-    void inorder(TreeNode* root){
-        if(root==nullptr)
-            return;
-        else{
-            inorder(root->left);
-            in.push_back(root->val);
-            inorder(root->right);
-        }
-    }
+    stack<TreeNode*> st;
     BSTIterator(TreeNode* root) {
-        inorder(root);
+        pushAll(root);
     }
     
-    /** @return the next smallest number */
     int next() {
-        int temp = in[ptr];
-        ptr++;
-        return temp;
+        auto t = st.top(); st.pop();
+        pushAll(t->right);
+        return t->val;
     }
     
-    /** @return whether we have a next smallest number */
     bool hasNext() {
-        return ptr<in.size();
+        return !st.empty();
+    }
+
+    void pushAll(TreeNode* root){
+        while(root){
+            st.push(root);
+            root= root->left;
+        }
     }
 };
 
