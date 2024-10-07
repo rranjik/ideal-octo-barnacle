@@ -1,25 +1,23 @@
 class Solution {
 public:
-    int n;
-    void dfs(int i, int k, vector<int>& curr, vector<vector<int>>& res){
-        if(!k){
-            res.push_back(curr);
+    vector<vector<int>> res;
+    void dfs(int pos, vector<int>& cur){
+        if(cur.size()==k){
+            res.push_back(cur);
             return;
         }
-        //cout<<"i = "<<i<<"; k = "<<k<<endl;
-        //int j = 0;
-        for(int j = i; /*((n-j+1)>=k-1)&&*/j<=n; j++){
-            curr.push_back(j);
-            dfs(j+1, k-1, curr, res);
-            curr.pop_back();
+        for(int i = pos; i<=n/*-(k-cur.size)*/; i++){
+            cur.push_back(i);
+            dfs(i+1, cur);
+            cur.pop_back();
         }
-        //cout<<"i = "<<i<<" to "<<j-1<<endl;
     }
+    int n;
+    int k; 
     vector<vector<int>> combine(int n, int k) {
-        this->n = n;
-        vector<vector<int>> res;
-        vector<int> c;
-        dfs(1, k, c, res);
+        this->n = n; this->k = k;
+        vector<int> cur;
+        dfs(1, cur);
         return res;
     }
 };
