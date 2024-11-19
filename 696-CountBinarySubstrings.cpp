@@ -1,18 +1,31 @@
 class Solution {
 public:
+    /*
+    00110011
+    12101210
+    */
     int countBinarySubstrings(string s) {
-        int cur = 1;
-        int pre = 0;
-        int res{};
-        for(int i = 1; i<s.size(); i++){
-            if(s[i]==s[i-1]) cur++;
-            else {
-                res +=min(cur, pre);
-                pre = cur;
-                cur = 1;
+        int nz = 0;
+        int no = 0;
+        char last = ' ';
+        int res = 0;
+        s+=' ';
+        for(int i = 0; i<s.size(); i++){
+            //cout<<"no = "<<no<<" nz = "<<nz<<endl;
+            char c = s[i];
+            if(c!=last){
+                res += min(nz, no);
+                if(c=='0'){
+                    nz = 1;
+                }else{
+                    no = 1;
+                }
+            }else {
+                if(c=='0') nz++;
+                else no++;
             }
+            last = c;
         }
-        res +=min(cur, pre);
         return res;
     }
 };
