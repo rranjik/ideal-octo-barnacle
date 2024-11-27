@@ -1,28 +1,52 @@
 class Solution {
 public:
-    vector<int> choices;
-    unordered_map<int, int> cache;
-    int dp(int n) {
-        if(cache.find(n)!=cache.end())
-            return cache[n];
-        if(n==0){
-            cache[0] = 0;
-            return cache[n];
-        }
-        int res = numeric_limits<int>::max();
-        for(int i = 0; i<choices.size(); i++){
-            if(choices[i]<=n){
-                res = min(res, dp(n-choices[i])+1);
-            }
-        }
-        cache[n] = res;
-        return cache[n];
-    }
+    vector<int>s;
+    unordered_map<int,int>m;
     int numSquares(int n) {
-        int s = sqrt(n);
-        for(int i = 1; i<=s; i++){
-            choices.push_back(i*i);
+        for(int i=1;i<=100;i++)
+        {
+            s.push_back(i*i);
+           // cout<<i*i << " ";
+
         }
-        return dp(n);
+        
+        return dfs(n);
+    }
+    int dfs(int n)
+    {
+        //cout<< n << endl;
+        if(n==1)
+        {
+            return m[n]=1;
+
+        }
+        if(n==0)
+        {
+            return m[n]=0;
+        } 
+        if(m.find(n)!=m.end())
+        {
+            return m[n];
+        }       
+        
+        int cost=1e9;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]<=n)
+            {
+                int v = n-s[i];
+                
+                cost = min(cost, 1+dfs(v));
+              //  cout<< " cost is" << cost << endl;
+                
+                
+            }
+            else
+            {
+                break;
+            }
+            
+        }
+        return m[n]=cost;
     }
 };
