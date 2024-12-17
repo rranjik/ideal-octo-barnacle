@@ -1,40 +1,33 @@
 class Solution {
 public:
-    int group(vector<int>& a, int g, int k){
-        int res = 1e9;
-        int j = 0;
-        int other = 0;
-        for(int i = 0; i<a.size(); i++){
-            if(i-j+1<=k){
-                if(a[i]!=g){
-                    other++;
-                }
-            }else{
-                if(a[j]!=g){
-                    other--;
-                }
-                
-                if(a[i]!=g){
-                    other++;
-                }
-                res = min(res, other);
-                j++;
-            }
-            //cout<<"i = "<<i<<" j = "<<j<<" other = "<<other<<endl;
-        }
-        res = min(res, other);
-        //cout<<"****"<<endl;
-        return res;
-    }
     int minSwaps(vector<int>& nums) {
-        int w = 0;
-        int z = 0;
-        for(int i = 0; i<nums.size(); i++){
-            if(nums[i]==1) w++;
-            else z++;
+        //window size
+        int sum = accumulate(nums.begin(),nums.end(),0);
+        
+        vector<int>n = nums;
+        n.insert(n.end(),nums.begin(),nums.end());
+        
+        int cs=0;
+        int ans = 1e9;
+        for(int i=0;i<sum;i++)
+        {
+            cs+=n[i];
         }
-        //cout<<group(nums, 1, w)<<" "<<group(nums, 0, z)<<endl;
-        return min(group(nums, 1, w), group(nums, 0, z));
-        return 0;
+        int cswap = sum-cs;
+        ans = min(ans,cswap);
+        for(int i=sum;i<nums.size()-1+sum;i++)
+        {
+            //cout<< " ith index " << i <<endl;
+            int j = i-sum;
+            cout<<j<<endl;
+            cs = cs - n[j];
+            cs+= n[i];
+           // cout<< "current sum " << cs<<endl;
+            cswap = sum-cs;
+            ans = min(ans,cswap);
+        }
+        return ans;
+
+
     }
 };
