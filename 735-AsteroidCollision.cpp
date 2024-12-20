@@ -1,42 +1,26 @@
 class Solution {
 public:
-    bool collide(int a, int b){
-        if(a>0&&b<0) return true;
-        else return false;
-    }
-    int sim(int a, int b){
-        if(abs(a)==abs(b)) return 0;
-        if(abs(a)>abs(b)) return a;
-        else return b;
-    }
     vector<int> asteroidCollision(vector<int>& asteroids) {
-        stack<int> a;
-        for(const auto& as : asteroids){
-            //new asteroid to put in
-            int nas = as;
-            //is it in yet ?
-            bool in = false;
-            while(!a.empty()&&!in&&nas){
-                //top asteroid
-                int tas = a.top();
-                if(collide(tas, nas)){
-                    a.pop();
-                    nas = sim(tas, nas);
-                }else {
-                    a.push(nas);
-                    in = true;
-                }
+        vector<int> s;
+        for(const auto& a : asteroids){
+            if(s.empty()){
+                s.push_back(a);
+                continue;
             }
-            if(a.empty()&&!in&&nas){
-                a.push(nas);
+            if(a>0){
+                s.push_back(a);
+                continue;
+            }
+            bool dead = false;
+            while(!s.empty()&&s.back()>0&&s.back()<=abs(a)){
+                if(s.back()==abs(a)) {dead = true; s.pop_back(); break;}
+                s.pop_back();
+            }
+            if(dead) continue;
+            if(s.empty()||s.back()<0){
+                s.push_back(a);
             }
         }
-        vector<int> res;
-        while(!a.empty()){
-            res.push_back(a.top());
-            a.pop();
-        }
-        reverse(res.begin(), res.end());
-        return res;
+        return s;
     }
 };
