@@ -1,36 +1,32 @@
 class Solution {
 public:
-    vector<int> findDiagonalOrder(vector<vector<int>>& matrix) {
-        vector<int> res;
-        int m = matrix.size();
-        if(!m) return res;
-        int n = matrix[0].size();
-        bool rev = true;
-        for(int i = 0; i<n; i++){
-            int si = 0; int ei = i;
-            vector<int> inter;
-            while(si<m&&ei>=0){
-                inter.push_back(matrix[si][ei]);
-                si++; ei--;
+    vector<int> findDiagonalOrder(vector<vector<int>>& a) {
+        vector<vector<int>> dir = {{-1, 1}, {1, -1}};
+        int d = 0;
+        int r = 0; int c = 0;
+        vector<int> res = {};
+        int m = a.size(); int n = a[0].size();
+        while(res.size()<m*n){
+            cout<<"d = "<<d<<endl;
+            while(r>=0&&r<m&&c>=0&&c<n){
+                cout<<" a["<<r<<"]["<<c<<"] = "<<a[r][c]<<endl;
+                res.push_back(a[r][c]);
+                r+=dir[d][0];
+                c+=dir[d][1];
             }
-            if(rev){
-                reverse(inter.begin(), inter.end());
+            if(d==0) {
+                r++;
+                if(c>=n){
+                    c--; r++;
+                }
+            }else {
+                c++;
+                if(r>=m){
+                    r--; c++;
+                }
             }
-            rev = !rev;
-            res.insert(res.end(), inter.begin(), inter.end());
-        }
-        for(int i = 1; i<m; i++){
-            int si = i;int ei = n-1;
-            vector<int> inter;
-            while(si<m&&ei>=0){
-                inter.push_back(matrix[si][ei]);
-                si++; ei--;
-            }
-            if(rev){
-                reverse(inter.begin(), inter.end());
-            }
-            rev = !rev;
-            res.insert(res.end(), inter.begin(), inter.end());
+            d = d+1;
+            d%=2;
         }
         return res;
     }
