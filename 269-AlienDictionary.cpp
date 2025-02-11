@@ -1,52 +1,83 @@
 class Solution {
 public:
+    pair<bool, pair<int, int>> getedge(const string& a, const string& b){
+        int n = a.size(); int m = b.size();
+        for(int i = 0; i<min(m,n); i++){
+            if(a[i]!=b[i]) return {true, {a[i]-'a', b[i]-'a'}};
+        }
+        return {false, {}};
+    }
+    bool valid(const string& a, const string& b){
+        if(a.size()>b.size()){
+            if(a.find(b)==0)return false;
+        }
+        return true;
+    }
+    void print(vector<vector<int>> adjl){
+        for(int i = 0; i<adjl.size(); i++){
+            cout<<i<<"->";
+            for(int j = 0; j<adjl[i].size(); j++){
+                cout<<adjl[i][j]<<" ";
+            }
+            cout<<endl;
+        }
+    }
     string alienOrder(vector<string>& words) {
-        map<char, set<char>> adjl;
-        map<char, int> indegrees;
-        for(const auto& w : words){
-            for(int i = 0; i<w.size(); i++){
-                indegrees[w[i]] = 0;
-            }
-        }
+        vector<vector<int>> adjl(26);
+        vector<int> deg(26);
+        unordered_set<int> all;
         for(int i = 0; i<words.size()-1; i++){
-            int len = min(words[i].length(), words[i+1].length());
-            for(int j = 0; j<len; j++){
-                if(words[i][j]!=words[i+1][j]){
-                    if(adjl[words[i][j]].find(words[i+1][j])==adjl[words[i][j]].end()){
-                        adjl[words[i][j]].insert(words[i+1][j]);
-                        indegrees[words[i+1][j]]++;
-                    }
-                    break;
-                }
-            }       
+            if(!valid(words[i], words[i+1]))return "";
+            auto [ok, e] = getedge(words[i], words[i+1]);
+            auto [u, v] = e;
+            if(!ok) continue;
+            all.insert(v); all.insert(v);
+            adjl[v].push_back(u);
+            deg[u]++;
         }
-        queue<char> q;
-        for(auto it : indegrees) if(!it.second) q.push(it.first);
-        string res;
-        while(!q.empty()){
-            auto c = q.front();
-            q.pop();
-            res+=c;
-            if(adjl.find(c)!=adjl.end()){
-                for(auto it : adjl[c]){
-                    indegrees[it]--;
-                    if(!indegrees[it]) q.push(it);
-                }
+        unordered_set<char> rres;
+        for(const auto& w : words){
+            for(const auto& c : w){
+                rres.insert(c);
             }
         }
-        if(res.length()!=indegrees.size()) return "";
-        return res;
-        //while(!q.isEmpty()){
-        //    char c=q.remove();
-        //    result+=c;
-        //    if(map.containsKey(c)){
-        //        for(char c2: map.get(c)){
-        //            degree.put(c2,degree.get(c2)-1);
-        //            if(degree.get(c2)==0) q.add(c2);
-        //        }
-        //    }
-        //}
-        //if(result.length()!=degree.size()) return "";
-        //return result;
+        if(all.size()==0){
+            string s;
+            for(const auto& c : rres){
+                s+=c;
+            }
+            return s;
+        }
+        print(adjl);
+        queue<int> q;
+        if(all.size())
+        for(int i = 0; i<26; i++){
+            if(all.find(i)!=all.end()&&deg[i]==0){
+                q.push(i);
+            }
+        }
+        bool added = true;
+        vector<int> res;
+        while(q.size()){
+            auto f = q.front();
+            q.pop();
+            res.push_back(f);
+            all.erase(f);
+            for(const auto& s : adjl[f]){
+                deg[s]--;
+                if(deg[s]==0) q.push(s);
+            }
+        }
+        if(all.size()!=0) return "";
+        string s;
+        for(int i = 0; i<res.size(); i++){
+            rres.erase('a'+res[i]);
+            s+= 'a'+res[i];
+        }
+        reverse(s.begin(), s.end());
+        for(const auto& x : rres){
+            s.push_back(x);
+        }
+        return s;
     }
 };
